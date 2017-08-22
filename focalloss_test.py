@@ -12,8 +12,8 @@ import argparse
 from focalloss import *
 
 
-
 start_time = time.time()
+maxe = 0
 for i in range(1000):
     x = torch.rand(12800,2)*random.randint(1,10)
     x = Variable(x.cuda())
@@ -24,14 +24,12 @@ for i in range(1000):
     output1 = nn.CrossEntropyLoss()(x,l)
     a = output0.data[0]
     b = output1.data[0]
-    if abs(a-b)>1e-5: print(a-b,a,b)
-print('time:',time.time()-start_time)
-
-
-
+    if abs(a-b)>maxe: maxe = abs(a-b)
+print('time:',time.time()-start_time,'max_error:',maxe)
 
 
 start_time = time.time()
+maxe = 0
 for i in range(100):
     x = torch.rand(128,1000,8,4)*random.randint(1,10)
     x = Variable(x.cuda())
@@ -43,5 +41,5 @@ for i in range(100):
     output1 = nn.NLLLoss2d()(F.log_softmax(x),l)
     a = output0.data[0]
     b = output1.data[0]
-    if abs(a-b)>1e-5: print(a-b,a,b)
-print('time:',time.time()-start_time)
+    if abs(a-b)>maxe: maxe = abs(a-b)
+print('time:',time.time()-start_time,'max_error:',maxe)
